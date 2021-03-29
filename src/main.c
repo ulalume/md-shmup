@@ -1,10 +1,9 @@
 #include "genesis.h"
-
+#include "sprite.h"
 
 int main(bool hardReset)
 {
     VDP_drawText("Hello world !", 12, 12);
-
     while(TRUE)
     {
         // nothing to do here

@@ -1,0 +1,1 @@
+SPRITE player_sprite "sprite/player.png" 1 1 0
