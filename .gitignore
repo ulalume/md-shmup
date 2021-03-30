@@ -82,3 +82,4 @@ dkms.conf
 **/out/**
 
 _resources
+_resources/**/*.*
