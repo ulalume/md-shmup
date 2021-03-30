@@ -26,12 +26,11 @@ int main(bool hardReset)
     {
         player_pos_x += player_vel_x;
         player_pos_y += player_vel_y;
+        player_anim = (player_anim + 1) % 3;
         
-        player_anim = player_anim == 0 ? 1 : 0;
         SPR_setAnimAndFrame(player, 0, player_anim);
         SPR_setPosition(player, player_pos_x, player_pos_y);
 
-        KLog_U1("player_pos_x", player_pos_x);
         SPR_update();
 
         // always call this method at the end of the frame        
