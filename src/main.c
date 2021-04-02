@@ -2,13 +2,12 @@
 #include "sprite.h"
 #include "entity.h"
 
-
 #define ANIM_STRAIGHT   0
 #define ANIM_MOVE_DOWN  1
 #define ANIM_MOVE_UP    2
 
 void joyHandler( u16 joy, u16 changed, u16 state);
-Entity player = {144, 200, 8, 8, 0, 0, 1, NULL};
+Entity player = {144, 200, 16, 16, 0, 0, 1, NULL};
 
 void Player_update(Entity * player) {
     player->x += player->velx;
