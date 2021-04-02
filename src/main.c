@@ -7,7 +7,6 @@ int player_pos_x = 144;
 int player_pos_y = 200;
 int player_vel_x = 0;
 int player_vel_y = 0;
-int player_anim = 0;
 
 int main(bool hardReset)
 {
@@ -26,9 +25,7 @@ int main(bool hardReset)
     {
         player_pos_x += player_vel_x;
         player_pos_y += player_vel_y;
-        player_anim = (player_anim + 1) % 3;
         
-        SPR_setAnimAndFrame(player, 0, player_anim);
         SPR_setPosition(player, player_pos_x, player_pos_y);
 
         SPR_update();
