@@ -1,36 +1,39 @@
 #include "genesis.h"
 #include "sprite.h"
+#include "entity.h"
+
+
+#define ANIM_STRAIGHT   0
+#define ANIM_MOVE_DOWN  1
+#define ANIM_MOVE_UP    2
 
 void joyHandler( u16 joy, u16 changed, u16 state);
+Entity player = {144, 200, 8, 8, 0, 0, 1, NULL};
 
-int player_pos_x = 144;
-int player_pos_y = 200;
-int player_vel_x = 0;
-int player_vel_y = 0;
+void Player_update(Entity * player) {
+    player->x += player->velx;
+    player->y += player->vely;
+    
+    SPR_setPosition(player->sprite, player->x, player->y);
+}
 
 int main(bool hardReset)
 {
-    Sprite* player;
+    VDP_drawText("v.0.0.1", 0, 0);
+
     SPR_init(0, 0, 0);
+
+    VDP_setPalette(PAL1, player_sprite.palette->data);
+    player.sprite = SPR_addSprite(&player_sprite, player.x, player.y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
 
     JOY_init();
     JOY_setEventHandler( &joyHandler );
 
-    VDP_setPalette(PAL1, player_sprite.palette->data);
-
-    player = SPR_addSprite(&player_sprite, player_pos_x, player_pos_y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
-    VDP_drawText("v.0.0.1", 0, 0);
-
-    while(TRUE)
+    while(1)
     {
-        player_pos_x += player_vel_x;
-        player_pos_y += player_vel_y;
-        
-        SPR_setPosition(player, player_pos_x, player_pos_y);
+        Player_update(&player);
 
-        SPR_update();
-
-        // always call this method at the end of the frame        
+        SPR_update();      
         SYS_doVBlankProcess();
     }
 
@@ -43,28 +46,31 @@ void joyHandler( u16 joy, u16 changed, u16 state)
 	{
 		if (state & BUTTON_RIGHT)
 		{
-			player_vel_x = 1;
+			player.velx = 1;
 		}
 		else if (state & BUTTON_LEFT)
 		{
-			player_vel_x = -1;
+			player.velx = -1;
 		}
         else {
             if( (changed & BUTTON_RIGHT) | (changed & BUTTON_LEFT) ){
-				player_vel_x = 0;
+				player.velx = 0;
 			}
         }
 
         if (state & BUTTON_UP)
         {
-			player_vel_y = -1;
+			player.vely = -1;
+            SPR_setAnim(player.sprite, ANIM_MOVE_UP);
 		}
         else if (state & BUTTON_DOWN) {
-			player_vel_y = 1;
+			player.vely = 1;
+            SPR_setAnim(player.sprite, ANIM_MOVE_DOWN);
 		}
         else {
             if( (changed & BUTTON_UP) | (changed & BUTTON_DOWN) ){
-				player_vel_y = 0;
+				player.vely = 0;
+                SPR_setAnim(player.sprite, ANIM_STRAIGHT);
 			}
         }
 	}
