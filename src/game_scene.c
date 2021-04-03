@@ -1,21 +1,23 @@
 #include <genesis.h>
 #include "game_scene.h"
 
-Scene * s = NULL;
+Scene * gameScene = NULL;
 
 
 void GameScene_update () {
 }
 
 void GameScene_destory () {
-  if (s != NULL) {
-    MEM_free(s);
-    s = NULL;
+  if (gameScene != NULL) {
+    MEM_free(gameScene);
+    gameScene = NULL;
   }
 }
 
 Scene * GameScene_create () {
   GameScene_destory();
-  //s = { &GameScene_update, &GameScene_destory };
-  return s;
+  gameScene = (Scene *) MEM_alloc(sizeof(Scene));
+  gameScene->update = &GameScene_update;
+  gameScene->destroy = &GameScene_destory;
+  return gameScene;
 }
