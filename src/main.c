@@ -18,7 +18,7 @@ void Player_update(Entity * player) {
 
 int main(bool hardReset)
 {
-    VDP_drawText("v.0.0.1", 0, 0);
+    VDP_drawText("v.0.0.2", 0, 0);
 
     SPR_init(0, 0, 0);
 
