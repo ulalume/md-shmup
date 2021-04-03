@@ -83,3 +83,7 @@ dkms.conf
 
 _resources
 _resources/**/*.*
+
+out.bin
+symbol.txt
+boot/rom_head.bin
