@@ -3,6 +3,6 @@
 
 #include "scene.h"
 
-typedef Scene * GameScene_create();
+Scene * GameScene_create();
 
 #endif // _GAME_SCENE_H_
