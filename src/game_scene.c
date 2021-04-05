@@ -4,9 +4,8 @@
 #include "player.h"
 #include "game_scene.h"
 
-Scene *gameScene = NULL;
-Entity *gameScenePlayer;
-
+static Scene *gameScene = NULL;
+static Entity *gameScenePlayer;
 
 static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 {
@@ -39,7 +38,6 @@ static void GameScene_destory()
 
 Scene *GameScene_create()
 {
-
   GameScene_destory();
 
   VDP_setPalette(PAL1, player_sprite.palette->data);
@@ -52,7 +50,7 @@ Scene *GameScene_create()
   gameScenePlayer->velx = 0;
   gameScenePlayer->vely = 0;
   gameScenePlayer->health = 1;
-  gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
+  gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));;
 
   VDP_drawText("v.0.0.2", 0, 0);
   JOY_setEventHandler(&GameScene_joyHandler);

@@ -1,13 +1,13 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-typedef void Scene_update();
-typedef void Scene_destory();
-typedef void Scene_nextScene(enum SceneName name);
-
 enum SceneName {
   SceneNameGame
 };
+
+typedef void Scene_update();
+typedef void Scene_destory();
+typedef void Scene_nextScene(enum SceneName name);
 
 typedef struct {
   enum SceneName name;

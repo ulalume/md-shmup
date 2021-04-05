@@ -1,7 +1,7 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-#include <genesis.h>
+#include <genesis.h> 
 
 typedef struct {
 	int x;
