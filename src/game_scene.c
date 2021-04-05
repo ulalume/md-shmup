@@ -63,7 +63,7 @@ Scene *GameScene_create()
   gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
 
   VDP_setPalette(PAL2, space_image.palette->data);
-  gameSceneBackground = Background_create(PAL2, BG_A, &space_image, 0, 0, -2, 0);
+  gameSceneBackground = Background_create(PAL2, BG_A, &space_image, 0, 0, -2, -1);
 
   JOY_setEventHandler(&GameScene_joyHandler);
 
