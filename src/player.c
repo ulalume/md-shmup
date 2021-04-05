@@ -5,7 +5,7 @@
 #define ANIM_MOVE_DOWN 1
 #define ANIM_MOVE_UP 2
 
-void Player_joyHandler(Entity * player, u16 joy, u16 changed, u16 state)
+void Player_joyHandler(Entity *player, u16 joy, u16 changed, u16 state)
 {
   if (joy == JOY_1)
   {

@@ -35,7 +35,6 @@ static void GameScene_destory()
   JOY_setEventHandler(NULL);
 }
 
-
 Scene *GameScene_create()
 {
   GameScene_destory();
