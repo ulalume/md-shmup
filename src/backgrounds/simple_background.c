@@ -6,9 +6,8 @@
 #define BG_WIDTH (BG_CELL_WIDTH * 8)
 #define BG_HEIGHT (BG_CELL_HEIGHT * 8)
 
-SimpleBackground *SimpleBackground_create(int paletteIndex, VDPPlane bg, const Image *image, int x, int y, int velx, int vely)
+SimpleBackground *SimpleBackground_create(int palette, VDPPlane bg, const Image *image, int x, int y, int velx, int vely)
 {
-  VDP_setPalette(paletteIndex, image->palette->data);
   VDP_loadTileSet(image->tileset, 1, DMA);
   VDP_setPlaneSize(BG_CELL_WIDTH, BG_CELL_HEIGHT, FALSE);
 
@@ -25,7 +24,7 @@ SimpleBackground *SimpleBackground_create(int paletteIndex, VDPPlane bg, const I
     if (val > 3)
       val = 1;
 
-    VDP_setTileMapXY(bg, TILE_ATTR_FULL(paletteIndex, 0, 0, 0, val), thex, they);
+    VDP_setTileMapXY(bg, TILE_ATTR_FULL(palette, 0, 0, 0, val), thex, they);
   }
 
   SimpleBackground *b = (SimpleBackground *)MEM_alloc(sizeof(SimpleBackground));
