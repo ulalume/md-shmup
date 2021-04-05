@@ -1,9 +1,10 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-#include <genesis.h> 
+#include <genesis.h>
 
-typedef struct {
+typedef struct
+{
 	int x;
 	int y;
 	int w;
@@ -11,10 +12,11 @@ typedef struct {
 	int velx;
 	int vely;
 	int health;
-	Sprite* sprite;
+	Sprite *sprite;
 } Entity;
 
-void Entity_kill(Entity * e);
-void Entity_revive(Entity * e);
+void Entity_kill(Entity *e);
+void Entity_revive(Entity *e);
+bool Entity_collide(Entity *a, Entity *b);
 
 #endif // _ENTITY_H_
