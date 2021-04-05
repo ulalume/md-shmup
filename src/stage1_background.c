@@ -34,7 +34,7 @@ Stage1Background *Stage1Background_create(int paletteIndex, const Palette *palet
 void Stage1Background_update(Stage1Background *b)
 {
   b->x = (b->x + b->velx + BG_WIDTH * 2) % BG_WIDTH - BG_WIDTH;
-  b->y = (b->y + b->vely + BG_HEIGHT * 2) % BG_HEIGHT - BG_HEIGHT;
+  b->y = (b->y + b->vely + BG_HEIGHT * 2) % BG_HEIGHT;
 
   MAP_scrollTo(b->map, -b->x, -b->y);
 }
