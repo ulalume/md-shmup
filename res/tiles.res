@@ -1,0 +1,1 @@
+IMAGE space_image "tiles/space.bmp" FAST

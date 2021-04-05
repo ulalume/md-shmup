@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "sprite.h": "c",
-    "scene.h": "c"
+    "scene.h": "c",
+    "simple_background.h": "c",
+    "game_scene.h": "c"
   }
 }

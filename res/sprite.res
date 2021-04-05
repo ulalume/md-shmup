@@ -1,1 +1,0 @@
-SPRITE player_sprite "sprite/player.png" 2 2 0 3
