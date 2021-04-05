@@ -3,7 +3,7 @@
 #include "game_scene.h"
 
 Scene *scene;
-int main(bool hardReset)
+int main()
 {
   SPR_init(0, 0, 0);
   JOY_init();

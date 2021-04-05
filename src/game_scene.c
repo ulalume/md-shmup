@@ -1,11 +1,12 @@
 #include <genesis.h>
+
 #include "sprites.h"
+#include "tiles.h"
+
+#include "game_scene.h"
+#include "simple_background.h"
 #include "entity.h"
 #include "player.h"
-#include "game_scene.h"
-
-#include "tiles.h"
-#include "simple_background.h"
 
 static Scene *gameScene = NULL;
 static Entity *gameScenePlayer;
@@ -18,7 +19,7 @@ static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 
 static void GameScene_update()
 {
-  Background_update(gameSceneBackground);
+  SimpleBackground_update(gameSceneBackground);
   Entity_update(gameScenePlayer);
   SPR_update();
 }
@@ -39,7 +40,7 @@ static void GameScene_destory()
 
   if (gameSceneBackground != NULL)
   {
-    Background_destroy(gameSceneBackground);
+    SimpleBackground_destroy(gameSceneBackground);
     gameSceneBackground = NULL;
   }
 
@@ -63,7 +64,7 @@ Scene *GameScene_create()
   gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
 
   VDP_setPalette(PAL2, space_image.palette->data);
-  gameSceneBackground = Background_create(PAL2, BG_A, &space_image, 0, 0, -2, -1);
+  gameSceneBackground = SimpleBackground_create(PAL2, BG_A, &space_image, 0, 0, -2, -1);
 
   JOY_setEventHandler(&GameScene_joyHandler);
 

@@ -12,8 +12,8 @@ typedef struct
   int vely;
 } SimpleBackground;
 
-SimpleBackground *Background_create(int pallette, VDPPlane bg, const Image *image, int x, int y, int velx, int vely);
-void Background_update(SimpleBackground *b);
-void Background_destroy(SimpleBackground *b);
+SimpleBackground *SimpleBackground_create(int pallette, VDPPlane bg, const Image *image, int x, int y, int velx, int vely);
+void SimpleBackground_update(SimpleBackground *b);
+void SimpleBackground_destroy(SimpleBackground *b);
 
 #endif // _SIMPLE_BACKGROUND_H_
