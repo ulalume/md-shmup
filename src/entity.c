@@ -17,3 +17,11 @@ bool Entity_collide(Entity *a, Entity *b)
 {
 	return a->x < b->x + b->w && a->x + a->w > b->x && a->y < b->y + b->h && a->y + a->h >= b->y;
 }
+
+void Entity_update(Entity *e)
+{
+	e->x += e->velx;
+	e->y += e->vely;
+
+	SPR_setPosition(e->sprite, e->x, e->y);
+}

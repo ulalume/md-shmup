@@ -45,11 +45,3 @@ void Player_joyHandler(Entity *player, u16 joy, u16 changed, u16 state)
     }
   }
 }
-
-void Player_update(Entity *player)
-{
-  player->x += player->velx;
-  player->y += player->vely;
-
-  SPR_setPosition(player->sprite, player->x, player->y);
-}

@@ -16,5 +16,9 @@ int main(bool hardReset)
 
     SYS_doVBlankProcess();
   }
+
+  scene->destroy();
+  scene = NULL;
+
   return 0;
 }

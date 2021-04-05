@@ -19,7 +19,7 @@ static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 static void GameScene_update()
 {
   Background_update(gameSceneBackground);
-  Player_update(gameScenePlayer);
+  Entity_update(gameScenePlayer);
   SPR_update();
 }
 

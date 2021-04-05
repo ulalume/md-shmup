@@ -1,24 +1,24 @@
 
 #include "simple_background.h"
 
-#define BG_TILE_WIDTH 64
-#define BG_TILE_HEIGHT 32
-#define BG_WIDTH 512
-#define BG_HEIGHT 256
+#define BG_CELL_WIDTH 64
+#define BG_CELL_HEIGHT 32
+#define BG_WIDTH (BG_CELL_WIDTH * 8)
+#define BG_HEIGHT (BG_CELL_HEIGHT * 8)
 
 SimpleBackground *Background_create(int pallette, VDPPlane bg, const Image *image, int x, int y, int velx, int vely)
 {
   VDP_loadTileSet(image->tileset, 1, DMA);
-  VDP_setPlaneSize(BG_TILE_WIDTH, BG_TILE_HEIGHT, FALSE);
+  VDP_setPlaneSize(BG_CELL_WIDTH, BG_CELL_HEIGHT, FALSE);
 
   int i = 0;
   int thex = 0;
   int they = 0;
   int val = 1;
-  for (i = 0; i < BG_TILE_WIDTH * BG_TILE_HEIGHT; i += 1)
+  for (i = 0; i < BG_CELL_WIDTH * BG_CELL_HEIGHT; i += 1)
   {
-    thex = i % BG_TILE_WIDTH;
-    they = i / BG_TILE_WIDTH;
+    thex = i % BG_CELL_WIDTH;
+    they = i / BG_CELL_WIDTH;
 
     val = (random() % (10 - 1 + 1)) + 1;
     if (val > 3)
