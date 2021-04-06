@@ -24,7 +24,6 @@ RasterBackground *RasterBackground_create(int paletteIndex, VDPPlane bg, const I
   VDP_setPlaneSize(BG_CELL_WIDTH, BG_CELL_HEIGHT, FALSE);
 
   VDP_setScrollingMode(HSCROLL_LINE, VSCROLL_PLANE);
-
   SYS_setVIntCallback(&RasterBackground_vint);
 
   int i = 0;
