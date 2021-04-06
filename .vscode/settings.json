@@ -12,6 +12,7 @@
     "string": "c",
     "string_view": "c",
     "vector": "c",
-    "bullets.h": "c"
+    "bullets.h": "c",
+    "stage1_background.h": "c"
   }
 }

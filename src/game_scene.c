@@ -5,7 +5,8 @@
 #include "gfx.h"
 
 #include "game_scene.h"
-#include "stage1_background.h"
+//#include "stage1_background.h"
+#include "raster_background.h"
 
 #include "entity.h"
 #include "player.h"
@@ -13,7 +14,8 @@
 
 static Scene *gameScene = NULL;
 static Entity *gameScenePlayer = NULL;
-static Stage1Background *gameSceneBackgroundStage1;
+//static Stage1Background *gameSceneBackgroundStage1;
+static RasterBackground *gameSceneBackgroundRaster;
 
 static Bullets *gameSceneBullets = NULL;
 
@@ -31,7 +33,7 @@ static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 
 static void GameScene_update()
 {
-  Stage1Background_update(gameSceneBackgroundStage1);
+  RasterBackground_update(gameSceneBackgroundRaster);
   Entity_update(gameScenePlayer);
   Bullets_update(gameSceneBullets);
 
@@ -52,10 +54,10 @@ static void GameScene_destory()
     MEM_free(gameScenePlayer);
   }
 
-  if (gameSceneBackgroundStage1 != NULL)
+  if (gameSceneBackgroundRaster != NULL)
   {
-    Stage1Background_destroy(gameSceneBackgroundStage1);
-    gameSceneBackgroundStage1 = NULL;
+    RasterBackground_destroy(gameSceneBackgroundRaster);
+    gameSceneBackgroundRaster = NULL;
   }
 
   if (gameSceneBullets != NULL)
@@ -88,7 +90,22 @@ Scene *GameScene_create()
   gameSceneBullets = Bullets_create();
 
   // bg
-  gameSceneBackgroundStage1 = Stage1Background_create(PAL2, &stage1_palette, BG_A, &stage1_map, 0, 0, -1, 0);
+  //gameSceneBackgroundStage1 = Stage1Background_create(PAL2, &stage1_palette, BG_A, &stage1_map, 0, 0, -1, 0);
+
+  s16 x[TABLE_LEN];
+  s16 velx[TABLE_LEN];
+  s16 s, ns;
+  for (int i = 0; i < TABLE_LEN; i++)
+  {
+    x[i] = FIX16(0);
+    velx[i] = random() % 12;
+    do
+    {
+      ns = -((random() & 0x3F) + 10);
+    } while (ns == s);
+    velx[i] = ns;
+  }
+  gameSceneBackgroundRaster = RasterBackground_create(PAL2, BG_A, &space_image, x, 0, velx, 0);
   JOY_setEventHandler(&GameScene_joyHandler);
 
   gameScene = (Scene *)MEM_alloc(sizeof(Scene));

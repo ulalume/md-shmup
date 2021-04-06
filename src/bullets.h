@@ -9,7 +9,7 @@
 typedef struct
 {
   int onScreen;
-  Entity *list[MAX_BULLETS];
+  Entity list[MAX_BULLETS];
 } Bullets;
 
 Bullets *Bullets_create();
