@@ -1,5 +1,4 @@
-#ifndef _SIMPLE_BACKGROUND_H_
-#define _SIMPLE_BACKGROUND_H_
+#pragma once
 
 #include <genesis.h>
 
@@ -15,5 +14,3 @@ typedef struct
 SimpleBackground *SimpleBackground_create(int paletteIndex, VDPPlane bg, const Image *image, int x, int y, int velx, int vely);
 void SimpleBackground_update(SimpleBackground *b);
 void SimpleBackground_destroy(SimpleBackground *b);
-
-#endif // _SIMPLE_BACKGROUND_H_

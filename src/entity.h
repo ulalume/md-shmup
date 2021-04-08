@@ -1,5 +1,4 @@
-#ifndef _ENTITY_H_
-#define _ENTITY_H_
+#pragma once
 
 #include <genesis.h>
 
@@ -19,5 +18,3 @@ void Entity_kill(Entity *e);
 void Entity_revive(Entity *e);
 bool Entity_collide(Entity *a, Entity *b);
 void Entity_update(Entity *e);
-
-#endif // _ENTITY_H_

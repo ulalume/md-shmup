@@ -1,5 +1,4 @@
-#ifndef _SCENE_H_
-#define _SCENE_H_
+#pragma once
 
 enum SceneName
 {
@@ -17,4 +16,3 @@ typedef struct
   Scene_destory *destroy;
   Scene_nextScene *onChangeNextScene;
 } Scene;
-#endif // _SCENE_H_

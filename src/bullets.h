@@ -1,5 +1,4 @@
-#ifndef _BULLETS_H_
-#define _BULLETS_H_
+#pragma once
 
 #include <genesis.h>
 #include "entity.h"
@@ -16,5 +15,3 @@ Bullets *Bullets_create();
 void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely);
 void Bullets_update(Bullets *b);
 void Bullets_destroy(Bullets *b);
-
-#endif // _BULLETS_H_
