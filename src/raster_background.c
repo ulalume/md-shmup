@@ -13,8 +13,24 @@ static void RasterBackground_vint()
   VDP_setHorizontalScrollLine(rasterBackground->bg, 0, rasterBackground->_x, TABLE_LEN, TRUE);
 }
 
-RasterBackground *RasterBackground_create(int paletteIndex, VDPPlane bg, const Image *image, fix16 x[TABLE_LEN], int y, fix16 velx[TABLE_LEN], int vely)
+RasterBackground *RasterBackground_create(int paletteIndex, VDPPlane bg, const Image *image)
 {
+  s16 x[TABLE_LEN];
+  s16 velx[TABLE_LEN];
+  s16 s, ns;
+  int y = 0;
+  int vely = 0;
+  for (int i = 0; i < TABLE_LEN; i++)
+  {
+    x[i] = FIX16(0);
+    velx[i] = random() % 12;
+    do
+    {
+      ns = -((random() & 0x3F) + 10);
+    } while (ns == s);
+    velx[i] = ns;
+  }
+
   RasterBackground_destroy(rasterBackground);
 
   SYS_disableInts();

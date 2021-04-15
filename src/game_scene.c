@@ -20,6 +20,7 @@ static Stage1Background *gameSceneBackgroundStage1;
 //static RasterBackground *gameSceneBackgroundRaster;
 
 static Bullets *gameSceneBullets = NULL;
+static Bullets *gameSceneEnemyBullets = NULL;
 
 static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 {
@@ -28,7 +29,7 @@ static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
   {
     if (state & BUTTON_B & changed)
     {
-      Bullets_shoot(gameSceneBullets, gameScenePlayer->x, gameScenePlayer->y, 3, 0);
+      Bullets_shoot(gameSceneBullets, gameScenePlayer->x, gameScenePlayer->y, 3, 0, COLLISION_PLAYER_BULLET);
     }
   }
 }
@@ -38,7 +39,14 @@ static void GameScene_update()
   Stage1Background_update(gameSceneBackgroundStage1);
   //RasterBackground_update(gameSceneBackgroundRaster);
   Player_update(gameScenePlayer);
+
+  if (random() % 30 == 0)
+  {
+    Bullets_shoot(gameSceneEnemyBullets, 300, gameScenePlayer->y, -3, 0, COLLISION_ENEMY_BULLET);
+  }
+
   Bullets_update(gameSceneBullets);
+  Bullets_update(gameSceneEnemyBullets);
 
   Collision_update();
 
@@ -71,6 +79,11 @@ static void GameScene_destory()
     gameSceneBackgroundRaster = NULL;
   }
 */
+  if (gameSceneEnemyBullets != NULL)
+  {
+    Bullets_destroy(gameSceneEnemyBullets);
+    gameSceneEnemyBullets = NULL;
+  }
   if (gameSceneBullets != NULL)
   {
     Bullets_destroy(gameSceneBullets);
@@ -78,6 +91,16 @@ static void GameScene_destory()
   }
 
   JOY_setEventHandler(NULL);
+}
+
+void GameScene_onCollide(SimpleCollision *playerCollision, SimpleCollision *enemyBulletCollision)
+{
+  (void)playerCollision;
+
+  gameScenePlayer->health--;
+  KLog_S1("player->health:", gameScenePlayer->health);
+
+  Bullets_onCollide(gameSceneEnemyBullets, enemyBulletCollision);
 }
 
 Scene *GameScene_create()
@@ -96,27 +119,17 @@ Scene *GameScene_create()
   gameScenePlayer->vely = 0;
   gameScenePlayer->health = 1;
   gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
+  gameScenePlayer->collision = Collision_create(COLLISION_PLAYER, TRUE, 0, 0, 16, 16);
+  gameScenePlayer->collision->onCollide = GameScene_onCollide;
 
   // bullets
   gameSceneBullets = Bullets_create();
+  gameSceneEnemyBullets = Bullets_create();
 
   // bg
   gameSceneBackgroundStage1 = Stage1Background_create(PAL2, &stage1_palette, BG_A, &stage1_map, 0, 0, -1, 0);
   /*
-  s16 x[TABLE_LEN];
-  s16 velx[TABLE_LEN];
-  s16 s, ns;
-  for (int i = 0; i < TABLE_LEN; i++)
-  {
-    x[i] = FIX16(0);
-    velx[i] = random() % 12;
-    do
-    {
-      ns = -((random() & 0x3F) + 10);
-    } while (ns == s);
-    velx[i] = ns;
-  }
-  gameSceneBackgroundRaster = RasterBackground_create(PAL2, BG_A, &space_image, x, 0, velx, 0);
+  gameSceneBackgroundRaster = RasterBackground_create(PAL2, BG_A, &space_image);
   */
   JOY_setEventHandler(&GameScene_joyHandler);
 

@@ -7,6 +7,21 @@
 #define RIGHT_EDGE 320
 #define BOTTOM_EDGE 224
 
+void Bullets_onCollide(Bullets *b, SimpleCollision *collision)
+{
+  Entity *e = b->list;
+  for (u16 i = 0; i < MAX_BULLETS; i++)
+  {
+    if (e->collision == collision)
+    {
+      Entity_kill(e);
+      b->onScreen--;
+      break;
+    }
+    e++;
+  }
+}
+
 Bullets *Bullets_create()
 {
   Bullets *b = (Bullets *)MEM_alloc(sizeof(Bullets));
@@ -23,14 +38,13 @@ Bullets *Bullets_create()
     e->vely = 0;
     e->sprite = SPR_addSprite(&bullet_sprite, i * 10, 0, TILE_ATTR(PAL1, 0, FALSE, FALSE));
     e->collision = Collision_create(COLLISION_PLAYER_BULLET, FALSE, 0, -10, 4, 4);
-    //e->collision->onCollide = Bullets_onCollide;
     Entity_kill(e);
     e++;
   }
   return b;
 }
 
-void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely)
+void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely, enum CollisionType collisionType)
 {
   if (b->onScreen >= MAX_BULLETS)
     return;
@@ -44,6 +58,7 @@ void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely)
       e->y = fromY;
       e->velx = velx;
       e->vely = vely;
+      e->collision->type = collisionType;
 
       Entity_revive(e);
 

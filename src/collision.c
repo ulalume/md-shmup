@@ -81,6 +81,7 @@ void Collision_destroy(SimpleCollision *c)
 }
 void Collision_update()
 {
+  // TODO: 途中で collision を削除されたら多分おかしくなる
   SimpleCollision *c = collisionFirst;
   while (c != NULL)
   {
