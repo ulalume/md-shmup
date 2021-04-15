@@ -12,6 +12,8 @@
 #include "player.h"
 #include "bullets.h"
 
+#include "collision.h"
+
 static Scene *gameScene = NULL;
 static Entity *gameScenePlayer = NULL;
 static Stage1Background *gameSceneBackgroundStage1;
@@ -35,8 +37,10 @@ static void GameScene_update()
 {
   Stage1Background_update(gameSceneBackgroundStage1);
   //RasterBackground_update(gameSceneBackgroundRaster);
-  Entity_update(gameScenePlayer);
+  Player_update(gameScenePlayer);
   Bullets_update(gameSceneBullets);
+
+  Collision_update();
 
   SPR_update();
 }

@@ -4,18 +4,17 @@
 void Entity_kill(Entity *e)
 {
 	e->health = 0;
+	if (e->collision != NULL)
+		e->collision->enabled = FALSE;
 	SPR_setVisibility(e->sprite, HIDDEN);
 }
 
 void Entity_revive(Entity *e)
 {
 	e->health = 1;
+	if (e->collision != NULL)
+		e->collision->enabled = TRUE;
 	SPR_setVisibility(e->sprite, VISIBLE);
-}
-
-bool Entity_collide(Entity *a, Entity *b)
-{
-	return a->x < b->x + b->w && a->x + a->w > b->x && a->y < b->y + b->h && a->y + a->h >= b->y;
 }
 
 void Entity_update(Entity *e)
@@ -23,5 +22,28 @@ void Entity_update(Entity *e)
 	e->x += e->velx;
 	e->y += e->vely;
 
-	SPR_setPosition(e->sprite, e->x, e->y);
+	if (e->collision != NULL)
+	{
+		// 中心にする
+		e->collision->x = e->x + (e->w - e->collision->w) / 2;
+		e->collision->y = e->y + (e->h - e->collision->h) / 2;
+	}
+
+	if (e->sprite != NULL)
+	{
+		SPR_setPosition(e->sprite, e->x, e->y);
+	}
+}
+
+void Entity_destroy(Entity *e)
+{
+	if (e->sprite != NULL)
+	{
+		SPR_end(e->sprite);
+	}
+	if (e->collision != NULL)
+	{
+		Collision_destroy(e->collision);
+	}
+	MEM_free(e);
 }
