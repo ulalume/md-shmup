@@ -316,5 +316,35 @@
    "src/stage1_background.o"
   ],
   "file": "src/stage1_background.c"
+ },
+ {
+  "directory": "/Users/kbt/Documents/KSG/md-shmup",
+  "arguments": [
+   "/Users/kbt/mars/m68k-elf/bin/m68k-elf-gcc",
+   "-m68000",
+   "-Wall",
+   "-Wextra",
+   "-std=c99",
+   "-ffreestanding",
+   "-O3",
+   "-fno-web",
+   "-fno-gcse",
+   "-fno-unit-at-a-time",
+   "-fomit-frame-pointer",
+   "-fshort-enums",
+   "-flto",
+   "-fuse-linker-plugin",
+   "-Isrc",
+   "-Ires",
+   "-Iinc",
+   "-I/Users/kbt/mars/m68k-elf/lib/gcc/m68k-elf/9.3.0/include",
+   "-I/Users/kbt/mars/m68k-elf/include",
+   "-I/Users/kbt/mars/m68k-elf/m68k-elf/include",
+   "-c",
+   "src/enemy.c",
+   "-o",
+   "src/enemy.o"
+  ],
+  "file": "src/enemy.c"
  }
 ]

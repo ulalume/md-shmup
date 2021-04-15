@@ -4,9 +4,7 @@
 #include "collision.h"
 #include "doubly_linked_list.h"
 
-typedef struct _entity Entity;
-
-typedef struct _entity
+typedef struct
 {
 	DLListNode _node;
 	s16 x;

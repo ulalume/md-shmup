@@ -3,9 +3,7 @@
 #include "bullets.h"
 #include "entity.h"
 #include "collision.h"
-
-#define RIGHT_EDGE 320
-#define BOTTOM_EDGE 224
+#include "const.h"
 
 void Bullets_onCollide(Bullets *b, SimpleCollision *collision)
 {
@@ -15,17 +13,17 @@ void Bullets_onCollide(Bullets *b, SimpleCollision *collision)
     if (e->collision == collision)
     {
       Entity_kill(e);
-      b->onScreen--;
+      b->onScreenNum--;
       break;
     }
     e++;
   }
 }
 
-Bullets *Bullets_init()
+Bullets *Bullets_init(const SpriteDefinition *bulletSprite, enum CollisionType collisionType, Collision_onCollide *onCollide)
 {
   Bullets *b = (Bullets *)MEM_alloc(sizeof(Bullets));
-  b->onScreen = 0;
+  b->onScreenNum = 0;
 
   Entity *e = b->list;
   for (u16 i = 0; i < MAX_BULLETS; i++)
@@ -36,17 +34,20 @@ Bullets *Bullets_init()
     e->h = 8;
     e->velx = 0;
     e->vely = 0;
-    e->sprite = SPR_addSprite(&bullet_sprite, i * 10, 0, TILE_ATTR(PAL1, 0, FALSE, FALSE));
+    e->sprite = SPR_addSprite(bulletSprite, 0, -10, TILE_ATTR(PAL1, 0, FALSE, FALSE));
     e->collision = Collision_create(COLLISION_PLAYER_BULLET, FALSE, 0, -10, 4, 4);
+    e->collision->type = collisionType;
+    e->collision->onCollide = onCollide;
+
     Entity_kill(e);
     e++;
   }
   return b;
 }
 
-void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely, enum CollisionType collisionType)
+void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely)
 {
-  if (b->onScreen >= MAX_BULLETS)
+  if (b->onScreenNum >= MAX_BULLETS)
     return;
 
   Entity *e = b->list;
@@ -58,12 +59,11 @@ void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely, enum Co
       e->y = fromY;
       e->velx = velx;
       e->vely = vely;
-      e->collision->type = collisionType;
 
       Entity_revive(e);
 
       SPR_setPosition(e->sprite, e->x, e->y);
-      b->onScreen++;
+      b->onScreenNum++;
       break;
     }
     e++;
@@ -83,7 +83,7 @@ void Bullets_update(Bullets *b)
           e->x + e->w < 0 || e->x > RIGHT_EDGE)
       {
         Entity_kill(e);
-        b->onScreen--;
+        b->onScreenNum--;
       }
     }
     e++;

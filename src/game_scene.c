@@ -11,8 +11,8 @@
 #include "entity.h"
 #include "player.h"
 #include "bullets.h"
-
 #include "collision.h"
+#include "enemy.h"
 
 static Scene *gameScene;
 static Entity *gameScenePlayer;
@@ -22,6 +22,8 @@ static Stage1Background *gameSceneBackgroundStage1;
 static Bullets *gameSceneBullets;
 static Bullets *gameSceneEnemyBullets;
 
+static DLList *enemyList;
+
 static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 {
   Player_joyHandler(gameScenePlayer, joy, changed, state);
@@ -29,22 +31,39 @@ static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
   {
     if (state & BUTTON_B & changed)
     {
-      Bullets_shoot(gameSceneBullets, gameScenePlayer->x, gameScenePlayer->y, 3, 0, COLLISION_PLAYER_BULLET);
+      Bullets_shoot(gameSceneBullets, gameScenePlayer->x, gameScenePlayer->y, 3, 0);
     }
   }
 }
 
 static void GameScene_update()
 {
-  Stage1Background_update(gameSceneBackgroundStage1);
-  //RasterBackground_update(gameSceneBackgroundRaster);
-  Player_update(gameScenePlayer);
-
   if (random() % 30 == 0)
   {
-    Bullets_shoot(gameSceneEnemyBullets, 300, gameScenePlayer->y, -3, 0, COLLISION_ENEMY_BULLET);
+    Bullets_shoot(gameSceneEnemyBullets, 300, gameScenePlayer->y, -3, 0);
   }
 
+  if (random() % 180 == 0)
+  {
+    Enemy *enemy = Enemy_create(enemyList, EnemyType0, gameSceneEnemyBullets);
+    Entity *entity = (Entity *)enemy;
+    entity->x = 300;
+    entity->y = gameScenePlayer->y;
+    entity->velx = -1;
+  }
+
+  Stage1Background_update(gameSceneBackgroundStage1);
+  //RasterBackground_update(gameSceneBackgroundRaster);
+
+  Enemy *en = (Enemy *)enemyList->first;
+  while (en != NULL)
+  {
+    Enemy *next = (Enemy *)((DLListNode *)en)->next;
+    Enemy_update(en);
+    en = next;
+  }
+
+  Player_update(gameScenePlayer);
   Bullets_update(gameSceneBullets);
   Bullets_update(gameSceneEnemyBullets);
 
@@ -63,8 +82,7 @@ static void GameScene_destory()
 
   if (gameScenePlayer != NULL)
   {
-    SPR_end(gameScenePlayer->sprite);
-    MEM_free(gameScenePlayer);
+    Entity_destroy(gameScenePlayer);
   }
 
   if (gameSceneBackgroundStage1 != NULL)
@@ -78,7 +96,7 @@ static void GameScene_destory()
     RasterBackground_destroy(gameSceneBackgroundRaster);
     gameSceneBackgroundRaster = NULL;
   }
-*/
+  */
   if (gameSceneEnemyBullets != NULL)
   {
     Bullets_destroy(gameSceneEnemyBullets);
@@ -90,16 +108,41 @@ static void GameScene_destory()
     gameSceneBullets = NULL;
   }
 
+  if (enemyList != NULL)
+  {
+    DLListNode *n = enemyList->first;
+    while (n != NULL)
+    {
+      Enemy *enemy = (Enemy *)n;
+      Enemy_destroy(enemy);
+      n = n->next;
+    }
+    MEM_free(enemyList);
+  }
+
   JOY_setEventHandler(NULL);
 }
 
-void GameScene_onCollide(SimpleCollision *playerCollision, SimpleCollision *enemyBulletCollision)
+static void GameScene_onCollidePlayerBullets(SimpleCollision *playerBulletCollision, SimpleCollision *enemyCollision)
+{
+  DLListNode *n = enemyList->first;
+  while (n != NULL)
+  {
+    Enemy *enemy = (Enemy *)n;
+    Entity *entity = (Entity *)n;
+    if (entity->collision == enemyCollision)
+    {
+      Enemy_destroy(enemy);
+      break;
+    }
+    n = n->next;
+  }
+  Bullets_onCollide(gameSceneBullets, playerBulletCollision);
+}
+static void GameScene_onCollideEnemyBullets(SimpleCollision *enemyBulletCollision, SimpleCollision *playerCollision)
 {
   (void)playerCollision;
-
   gameScenePlayer->health--;
-  KLog_S1("player->health:", gameScenePlayer->health);
-
   Bullets_onCollide(gameSceneEnemyBullets, enemyBulletCollision);
 }
 
@@ -120,11 +163,13 @@ Scene *GameScene_create()
   gameScenePlayer->health = 1;
   gameScenePlayer->sprite = SPR_addSprite(&player_sprite, gameScenePlayer->x, gameScenePlayer->y, TILE_ATTR(PAL1, 0, FALSE, FALSE));
   gameScenePlayer->collision = Collision_create(COLLISION_PLAYER, TRUE, 0, 0, 16, 16);
-  gameScenePlayer->collision->onCollide = GameScene_onCollide;
+  //gameScenePlayer->collision->onCollide = GameScene_onCollidePlayer;
 
   // bullets
-  gameSceneBullets = Bullets_init();
-  gameSceneEnemyBullets = Bullets_init();
+  gameSceneBullets = Bullets_init(&bullet_sprite, COLLISION_PLAYER_BULLET, GameScene_onCollidePlayerBullets);
+  gameSceneEnemyBullets = Bullets_init(&bullet_sprite, COLLISION_ENEMY_BULLET, GameScene_onCollideEnemyBullets);
+
+  enemyList = (DLList *)MEM_alloc(sizeof(DLList));
 
   // bg
   gameSceneBackgroundStage1 = Stage1Background_create(PAL2, &stage1_palette, BG_A, &stage1_map, 0, 0, -1, 0);

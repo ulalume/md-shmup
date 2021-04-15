@@ -39,7 +39,7 @@ void Entity_destroy(Entity *e)
 {
 	if (e->sprite != NULL)
 	{
-		SPR_end(e->sprite);
+		SPR_releaseSprite(e->sprite);
 	}
 	if (e->collision != NULL)
 	{

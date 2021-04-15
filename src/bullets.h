@@ -2,17 +2,19 @@
 
 #include <genesis.h>
 #include "entity.h"
+#include "collision.h"
 
 #define MAX_BULLETS 6
 
 typedef struct
 {
-  int onScreen;
+  int onScreenNum;
   Entity list[MAX_BULLETS];
+  Collision_onCollide *onCollide;
 } Bullets;
 
-Bullets *Bullets_init();
-void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely, enum CollisionType collisionType);
+Bullets *Bullets_init(const SpriteDefinition *bulletSprite, enum CollisionType collisionType, Collision_onCollide *onCollide);
+void Bullets_shoot(Bullets *b, int fromX, int fromY, int velx, int vely);
 void Bullets_update(Bullets *b);
 void Bullets_destroy(Bullets *b);
 
