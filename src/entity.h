@@ -2,9 +2,13 @@
 
 #include <genesis.h>
 #include "collision.h"
+#include "doubly_linked_list.h"
 
-typedef struct
+typedef struct _entity Entity;
+
+typedef struct _entity
 {
+	DLListNode _node;
 	s16 x;
 	s16 y;
 	u16 w;
@@ -12,6 +16,7 @@ typedef struct
 	int velx;
 	int vely;
 	int health;
+
 	Sprite *sprite;
 	SimpleCollision *collision;
 } Entity;

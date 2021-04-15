@@ -14,13 +14,13 @@
 
 #include "collision.h"
 
-static Scene *gameScene = NULL;
-static Entity *gameScenePlayer = NULL;
+static Scene *gameScene;
+static Entity *gameScenePlayer;
 static Stage1Background *gameSceneBackgroundStage1;
 //static RasterBackground *gameSceneBackgroundRaster;
 
-static Bullets *gameSceneBullets = NULL;
-static Bullets *gameSceneEnemyBullets = NULL;
+static Bullets *gameSceneBullets;
+static Bullets *gameSceneEnemyBullets;
 
 static void GameScene_joyHandler(u16 joy, u16 changed, u16 state)
 {
@@ -123,8 +123,8 @@ Scene *GameScene_create()
   gameScenePlayer->collision->onCollide = GameScene_onCollide;
 
   // bullets
-  gameSceneBullets = Bullets_create();
-  gameSceneEnemyBullets = Bullets_create();
+  gameSceneBullets = Bullets_init();
+  gameSceneEnemyBullets = Bullets_init();
 
   // bg
   gameSceneBackgroundStage1 = Stage1Background_create(PAL2, &stage1_palette, BG_A, &stage1_map, 0, 0, -1, 0);

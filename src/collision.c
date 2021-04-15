@@ -2,18 +2,16 @@
 #include <genesis.h>
 #include "collision.h"
 
+#include "doubly_linked_list.h"
+
 #define MAX_COLLISION (100)
 
-static void Collision_add(SimpleCollision *c);
 SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h);
 static bool Collision_collide(SimpleCollision *a, SimpleCollision *b);
 void Collision_destroy(SimpleCollision *c);
-static void Collision_add(SimpleCollision *c);
-static void Collision_remove(SimpleCollision *c);
 void Collision_update();
 
-static SimpleCollision *collisionFirst;
-static SimpleCollision *collisionLast;
+static DLList collisionDLList;
 
 const bool COLLISION_TABLE[COLLISION_TYPE_MAX][COLLISION_TYPE_MAX] = {
     {0, 0, 1, 1},
@@ -21,43 +19,6 @@ const bool COLLISION_TABLE[COLLISION_TYPE_MAX][COLLISION_TYPE_MAX] = {
     {1, 1, 0, 0},
     {1, 0, 0, 0},
 };
-
-static bool Collision_collide(SimpleCollision *a, SimpleCollision *b)
-{
-  return a->enabled && b->enabled && COLLISION_TABLE[a->type][b->type] && a->x < b->x + b->w && a->x + a->w > b->x && a->y < b->y + b->h && a->y + a->h >= b->y;
-}
-static void Collision_add(SimpleCollision *c)
-{
-  if (collisionLast == NULL)
-  {
-    collisionFirst = c;
-    collisionLast = c;
-    return;
-  }
-
-  collisionLast->next = c;
-  c->prev = collisionLast;
-  collisionLast = c;
-}
-static void Collision_remove(SimpleCollision *c)
-{
-  if (c->prev == NULL)
-  {
-    collisionFirst = c->next;
-    c->next->prev = c->prev;
-    return;
-  }
-
-  if (c->next == NULL)
-  {
-    collisionLast = c->prev;
-    c->prev->next = c->next;
-    return;
-  }
-
-  c->prev->next = c->next;
-  c->next->prev = c->prev;
-}
 
 SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h)
 {
@@ -69,31 +30,37 @@ SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, 
   c->w = w;
   c->h = h;
 
-  Collision_add(c);
-
+  DLList_add(&collisionDLList, (DLListNode *)c);
   return c;
+}
+
+static bool Collision_collide(SimpleCollision *a, SimpleCollision *b)
+{
+  return a->enabled && b->enabled && COLLISION_TABLE[a->type][b->type] && a->x < b->x + b->w && a->x + a->w > b->x && a->y < b->y + b->h && a->y + a->h >= b->y;
 }
 
 void Collision_destroy(SimpleCollision *c)
 {
-  Collision_remove(c);
+  DLList_remove(&collisionDLList, (DLListNode *)c);
   MEM_free(c);
 }
 void Collision_update()
 {
   // TODO: 途中で collision を削除されたら多分おかしくなる
-  SimpleCollision *c = collisionFirst;
+  DLListNode *c = collisionDLList.first;
   while (c != NULL)
   {
-    SimpleCollision *c2 = c->next;
+    DLListNode *c2 = c->next;
     while (c2 != NULL)
     {
-      if (Collision_collide(c, c2))
+      SimpleCollision *col = (SimpleCollision *)c;
+      SimpleCollision *col2 = (SimpleCollision *)c2;
+      if (Collision_collide(col, col2))
       {
-        if (c->onCollide != NULL)
-          c->onCollide(c, c2);
-        if (c2->onCollide != NULL)
-          c2->onCollide(c2, c);
+        if (col->onCollide != NULL)
+          col->onCollide(col, col2);
+        if (col2->onCollide != NULL)
+          col2->onCollide(col2, col);
       }
 
       c2 = c2->next;

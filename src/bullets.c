@@ -22,7 +22,7 @@ void Bullets_onCollide(Bullets *b, SimpleCollision *collision)
   }
 }
 
-Bullets *Bullets_create()
+Bullets *Bullets_init()
 {
   Bullets *b = (Bullets *)MEM_alloc(sizeof(Bullets));
   b->onScreen = 0;
