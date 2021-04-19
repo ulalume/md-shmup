@@ -4,7 +4,9 @@
 #include "collision.h"
 #include "doubly_linked_list.h"
 
-typedef struct
+typedef struct _simpleCollision SimpleCollision;
+
+typedef struct _entity
 {
 	DLListNode _node;
 	s16 x;
@@ -14,13 +16,12 @@ typedef struct
 	int velx;
 	int vely;
 	int health;
-
 	Sprite *sprite;
 	SimpleCollision *collision;
 } Entity;
 
 void Entity_kill(Entity *e);
 void Entity_revive(Entity *e);
-void Entity_update(Entity *e);
 
+void Entity_update(Entity *e);
 void Entity_destroy(Entity *e);

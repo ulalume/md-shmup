@@ -1,7 +1,7 @@
 #include <genesis.h>
+#include "entity.h"
 #include "sprites.h"
 #include "bullets.h"
-#include "entity.h"
 #include "collision.h"
 #include "const.h"
 
@@ -35,8 +35,7 @@ Bullets *Bullets_init(const SpriteDefinition *bulletSprite, enum CollisionType c
     e->velx = 0;
     e->vely = 0;
     e->sprite = SPR_addSprite(bulletSprite, 0, -10, TILE_ATTR(PAL1, 0, FALSE, FALSE));
-    e->collision = Collision_create(COLLISION_PLAYER_BULLET, FALSE, 0, -10, 4, 4);
-    e->collision->type = collisionType;
+    e->collision = Collision_create(collisionType, FALSE, 0, -10, 4, 4, e);
     e->collision->onCollide = onCollide;
 
     Entity_kill(e);

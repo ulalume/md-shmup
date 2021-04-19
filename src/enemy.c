@@ -18,7 +18,7 @@ Enemy *Enemy_create(DLList *list, enum EnemyType type, Bullets *bullets)
   entity->vely = 0;
   entity->health = 1;
   entity->sprite = SPR_addSprite(&player_sprite, entity->x, entity->y, TILE_ATTR(PAL1, 0, FALSE, TRUE));
-  entity->collision = Collision_create(COLLISION_ENEMY, TRUE, 0, 0, 16, 16);
+  entity->collision = Collision_create(COLLISION_ENEMY, TRUE, 0, 0, 16, 16, entity);
 
   enemy->list = list;
   DLList_add(list, (DLListNode *)enemy);

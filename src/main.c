@@ -2,23 +2,29 @@
 #include "scene.h"
 #include "game_scene.h"
 
-Scene *scene;
+void joyHandler(u16 joy, u16 changed, u16 state)
+{
+  nowScene->joyHandler(nowScene, joy, changed, state);
+}
+
 int main()
 {
   SPR_init(0, 0, 0);
   JOY_init();
 
-  scene = GameScene_create();
+  nowScene = GameScene_create();
+
+  JOY_setEventHandler(joyHandler);
 
   while (1)
   {
-    scene->update();
+    nowScene->update(nowScene);
 
     SYS_doVBlankProcess();
   }
 
-  scene->destroy();
-  scene = NULL;
+  nowScene->destroy(nowScene);
+  nowScene = NULL;
 
   return 0;
 }

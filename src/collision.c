@@ -1,12 +1,13 @@
 
 #include <genesis.h>
 #include "collision.h"
+#include "entity.h"
 
 #include "doubly_linked_list.h"
 
 #define MAX_COLLISION (100)
 
-SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h);
+SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h, Entity *entity);
 static bool Collision_collide(SimpleCollision *a, SimpleCollision *b);
 void Collision_destroy(SimpleCollision *c);
 void Collision_update();
@@ -20,7 +21,7 @@ const bool COLLISION_TABLE[COLLISION_TYPE_MAX][COLLISION_TYPE_MAX] = {
     {1, 0, 0, 0},
 };
 
-SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h)
+SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, s16 y, u16 w, u16 h, Entity *entity)
 {
   SimpleCollision *c = (SimpleCollision *)MEM_alloc(sizeof(SimpleCollision));
   c->type = type;
@@ -29,6 +30,7 @@ SimpleCollision *Collision_create(enum CollisionType type, bool enabled, s16 x, 
   c->y = y;
   c->w = w;
   c->h = h;
+  c->entity = entity;
 
   DLList_add(&collisionDLList, (DLListNode *)c);
   return c;
